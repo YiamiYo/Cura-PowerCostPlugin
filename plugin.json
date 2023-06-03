@@ -1,0 +1,8 @@
+{
+    "name": "Power Cost",
+    "author": "YiamiYo",
+    "version": "0.1.0",
+    "description": "Simple plugin to display the estimated power cost of a print",
+    "api": 5,
+    "supported_sdk_versions": [ "5.0.0", "6.0.0", "7.0.0", "8.0.0" ]
+}
