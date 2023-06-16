@@ -1,8 +1,7 @@
 import QtQuick 2.10
 import QtQuick.Controls 2.3
 import QtQuick.Layouts 1.3
-
-import UM 1.5 as UM
+import UM 1.2 as UM
 import Cura 1.1 as Cura
 
 Cura.MachineAction {
@@ -41,120 +40,48 @@ Cura.MachineAction {
 		onClosing: cancel(false)
 	}
 
-	ListModel {
-		id: tabNameModel
+	Item {
+		id: powerPane
 
-		Component.onCompleted: update()
-
-		function update() {
-			clear()
-			append({ name: catalog.i18nc("@title:tab", "Power Cost Settings") })
-		}
-	}
-
-	UM.Label {
-		id: machineLabel
-
-		anchors{
-			top: parent.top
-			left: parent.left        
-			leftMargin: UM.Theme.getSize("default_margin").width
-		}
-		font: UM.Theme.getFont("large_bold")
-		text: Cura.MachineManager.activeMachine.name
-		horizontalAlignment: Text.AlignHCenter
-	}
-
-	UM.TabRow  {
-		id: tabBar
-
-		z: 5
-
-		anchors {
-			top: machineLabel.bottom
-			topMargin: UM.Theme.getSize("default_margin").height
-			bottomMargin: UM.Theme.getSize("default_margin").height
-		}
-		width: parent.width
-
-		Repeater {
-			model: tabNameModel
-			delegate: UM.TabRowButton {
-				checked: model.index == 0
-				text: model.name
+		RowLayout {
+			anchors {
+				top: parent.top
+				left: parent.left
+				right: parent.right
+				margins: UM.Theme.getSize("default_margin").width
 			}
-		}
-	}
+			spacing: UM.Theme.getSize("default_margin").width
 
-	Cura.RoundedRectangle {
-		id: tabView
+			Column {
+				Layout.fillWidth: true
+				Layout.alignment: Qt.AlignTop
 
-		anchors {
-			top: tabBar.bottom
-			topMargin: -UM.Theme.getSize("default_lining").height
-			bottom: actionButtons.top
-			bottomMargin: UM.Theme.getSize("default_margin").height
-			left: parent.left
-			right: parent.right
-		}
-		border {
-			color: UM.Theme.getColor("lining")
-			width: UM.Theme.getSize("default_lining").width
-		}
-		color: UM.Theme.getColor("main_background")
-		radius: UM.Theme.getSize("default_radius").width
-		cornerSide: Cura.RoundedRectangle.Direction.Down
+				spacing: UM.Theme.getSize("default_margin").height
 
-		StackLayout {
-			id: tabStack
+				Cura.NumericTextFieldWithUnit {
+					id: powerCostPerKWhField
 
-			anchors.fill: parent
-			currentIndex: tabBar.currentIndex
+					width: parent.width - 40
+					x: 25
+					valueText: manager.settingsPowerCostPerKWh
+					labelText: catalog.i18nc("@label", "Power Cost")
+					unitText: UM.Preferences.getValue("cura/currency") + " / " + catalog.i18nc("@label", "KWh")
+					labelFont: base.labelFont
+					labelWidth: base.labelWidth
+					controlWidth: base.controlWidth
+				}
 
-			Item {
-				id: powerPane
+				Cura.NumericTextFieldWithUnit {
+					id: powerConsumptionAverageField
 
-				RowLayout {
-					anchors {
-						top: parent.top
-						left: parent.left
-						right: parent.right
-						margins: UM.Theme.getSize("default_margin").width
-					}
-					spacing: UM.Theme.getSize("default_margin").width
-
-					Column {
-						Layout.fillWidth: true
-						Layout.alignment: Qt.AlignTop
-
-						spacing: UM.Theme.getSize("default_margin").height
-
-						Cura.NumericTextFieldWithUnit {
-							id: powerCostPerKWhField
-
-							width: parent.width - 40
-							x: 25
-							valueText: manager.settingsPowerCostPerKWh
-							labelText: catalog.i18nc("@label", "Power Cost")
-							unitText: UM.Preferences.getValue("cura/currency") + " / " + catalog.i18nc("@label", "KWh")
-							labelFont: base.labelFont
-							labelWidth: base.labelWidth
-							controlWidth: base.controlWidth
-						}
-
-						Cura.NumericTextFieldWithUnit {
-							id: powerConsumptionAverageField
-
-							width: parent.width - 40
-							x: 25
-							valueText: manager.settingsPowerConsumptionAverage
-							labelText: catalog.i18nc("@label", "Power Consumption Average")
-							unitText: catalog.i18nc("@label", "W")
-							labelFont: base.labelFont
-							labelWidth: base.labelWidth
-							controlWidth: base.controlWidth
-						}
-					}
+					width: parent.width - 40
+					x: 25
+					valueText: manager.settingsPowerConsumptionAverage
+					labelText: catalog.i18nc("@label", "Power Consumption Average")
+					unitText: catalog.i18nc("@label", "W")
+					labelFont: base.labelFont
+					labelWidth: base.labelWidth
+					controlWidth: base.controlWidth
 				}
 			}
 		}
@@ -168,7 +95,7 @@ Cura.MachineAction {
 			left: parent.left
 			right: parent.right
 			topMargin: UM.Theme.getSize("default_margin").height
-			bottomMargin: UM.Theme.getSize("default_margin").height
+			bottomMargin: UM.Theme.getSize("wide_margin").height
 		}
 
 		Flow  {

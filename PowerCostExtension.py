@@ -7,8 +7,18 @@ from cura.CuraApplication import CuraApplication
 from typing import Dict, Type, TYPE_CHECKING, List, Optional, cast
 
 import os.path
-from PyQt6.QtCore import QUrl, QObject, pyqtSignal, pyqtSlot, pyqtProperty #To find the QML for the dialogue window.
-from PyQt6.QtQml import QQmlComponent, QQmlContext #To create the dialogue window.
+
+try:
+	from cura.ApplicationMetadata import CuraSDKVersion
+except ImportError: # Cura <= 3.6   
+	CuraSDKVersion = "6.0.0"
+if CuraSDKVersion >= "8.0.0":
+	from PyQt6.QtCore import QUrl, QObject, pyqtSignal, pyqtSlot, pyqtProperty #To find the QML for the dialogue window.
+	from PyQt6.QtQml import QQmlComponent, QQmlContext #To create the dialogue window.
+else:
+	from PyQt5.QtCore import QUrl, QObject, pyqtSignal, pyqtSlot, pyqtProperty #To find the QML for the dialogue window.
+	from PyQt5.QtQml import QQmlComponent, QQmlContext #To create the dialogue window.
+
 from UM.Application import Application #To listen to the event of creating the main window, and get the QML engine.
 from UM.Logger import Logger #Adding messages to the log.
 from UM.PluginRegistry import PluginRegistry #Getting the location of Hello.qml.

@@ -1,6 +1,6 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.1
-import UM 1.5 as UM
+import UM 1.2 as UM
 import Cura 1.0 as Cura
 
 Rectangle {
@@ -20,10 +20,8 @@ Rectangle {
 		anchors.verticalCenter: parent.verticalCenter
 		anchors.horizontalCenter: parent.horizontalCenter
 		font: UM.Theme.getFont("default")
-		source: UM.Theme.getIcon("Lightning")
+		source: Qt.resolvedUrl("Lightning.svg")
 		implicitWidth: iconSize + 38
-		spacing: 0
-		tooltipText: catalog.i18nc("@label", "Estimated Power Cost")
 		text: "%1 %2".arg(UM.Preferences.getValue("cura/currency")).arg(manager.printPowerCost.toFixed(2))
 	}
 }
