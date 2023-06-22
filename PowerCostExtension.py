@@ -19,6 +19,9 @@ else:
 	from PyQt5.QtCore import QUrl, QObject, pyqtSignal, pyqtSlot, pyqtProperty #To find the QML for the dialogue window.
 	from PyQt5.QtQml import QQmlComponent, QQmlContext #To create the dialogue window.
 
+import locale
+locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+
 from UM.Application import Application #To listen to the event of creating the main window, and get the QML engine.
 from UM.Logger import Logger #Adding messages to the log.
 from UM.PluginRegistry import PluginRegistry #Getting the location of Hello.qml.
@@ -55,8 +58,11 @@ class PowerCostExtension(QObject, Extension):
 		if currentPrintTime.valid and not currentPrintTime.isTotalDurationZero:
 			config = getConfig()
 			if config:
-				powerConsumptionInWatts = float(config.get("power_consumption_average", "0.0").strip())
-				powerCostPerKWh = float(config.get("power_cost_per_kwh", "0.0").strip())
+				powerConsumptionInWatts = locale.atof(config.get("power_consumption_average", "0.0").strip())
+				try:
+					powerCostPerKWh = locale.atof(config.get("power_cost_per_kwh", "0.0").strip())
+				except ValueError:
+					powerCostPerKWh = 0.0
 				if powerConsumptionInWatts > 0.0 and powerCostPerKWh > 0.0:
 					powerCostPerHour = powerConsumptionInWatts / 1000.0 * powerCostPerKWh
 					printTimeInHours = int(self._app.getPrintInformation().currentPrintTime) / 3600.0
