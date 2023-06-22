@@ -55,8 +55,12 @@ class PowerCostExtension(QObject, Extension):
 		if currentPrintTime.valid and not currentPrintTime.isTotalDurationZero:
 			config = getConfig()
 			if config:
-				powerConsumptionInWatts = float(config.get("power_consumption_average", "0.0").strip())
-				powerCostPerKWh = float(config.get("power_cost_per_kwh", "0.0").strip())
+				try:
+					powerConsumptionInWatts = float(config.get("power_consumption_average", "0.0").strip().replace(',', '.'))
+					powerCostPerKWh = float(config.get("power_cost_per_kwh", "0.0").strip().replace(',', '.'))
+				except ValueError:
+					powerConsumptionInWatts = 0.0
+					powerCostPerKWh = 0.0
 				if powerConsumptionInWatts > 0.0 and powerCostPerKWh > 0.0:
 					powerCostPerHour = powerConsumptionInWatts / 1000.0 * powerCostPerKWh
 					printTimeInHours = int(self._app.getPrintInformation().currentPrintTime) / 3600.0
