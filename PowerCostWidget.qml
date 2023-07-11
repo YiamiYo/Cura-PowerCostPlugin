@@ -21,7 +21,6 @@ Rectangle {
 		anchors.horizontalCenter: parent.horizontalCenter
 		font: UM.Theme.getFont("default")
 		source: Qt.resolvedUrl("Lightning.svg")
-		implicitWidth: iconSize + 38
 		text: "%1 %2".arg(UM.Preferences.getValue("cura/currency")).arg(manager.printPowerCost.toFixed(2))
 	}
 }
